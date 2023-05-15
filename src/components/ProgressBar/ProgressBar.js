@@ -27,26 +27,19 @@ const SIZES = {
 }
 
 const ProgressBar = ({ value, size }) => {
+  if (value < MIN_VALUE || value > MAX_VALUE) {
+    throw new Error(`Invalid value passed to ProgressBar: ${value}`)
+  }
+
   const styles = SIZES[size]
-
-  if (value < MIN_VALUE) {
-    value = MIN_VALUE
-  } else if (value > MAX_VALUE) {
-    value = MAX_VALUE
-  }
-
-  let endBorderRadius = 0
-  if (value >= 99.8) {
-    endBorderRadius = '2px'
-  }
-  if (value >= 100) {
-    endBorderRadius = '4px'
+  if (!styles) {
+    throw new Error(`Unknown size passed to ProgressBar: ${size}`)
   }
 
   return (
     <>
       <VisuallyHidden>
-        <span id="loadinglabel">Loading</span>
+        <span id="loadinglabel">Loading: ${value}%</span>
       </VisuallyHidden>
       <OuterWrapper
         role="progressbar"
@@ -54,19 +47,27 @@ const ProgressBar = ({ value, size }) => {
         aria-valuenow={value}
         style={styles}
       >
-        <InnerBar value={value} endBorderRadius={endBorderRadius} />
+        <InnerBarWrapper>
+          <InnerBar value={value} />
+        </InnerBarWrapper>
       </OuterWrapper>
     </>
   )
 }
 
 const OuterWrapper = styled.div`
-  width: 370px;
   height: var(--height);
   padding: var(--padding);
   border-radius: var(--borderRadius);
   background-color: ${COLORS.transparentGray15};
   box-shadow: inset 0px 2px 4px ${COLORS.transparentGray35};
+`
+
+const InnerBarWrapper = styled.div`
+  height: 100%;
+  border-radius: 4px;
+  /* Trim off corners when progress bar is near-full */
+  overflow: hidden;
 `
 
 const InnerBar = styled.div`
@@ -75,8 +76,6 @@ const InnerBar = styled.div`
   background-color: ${COLORS.primary};
   border-start-start-radius: 4px;
   border-end-start-radius: 4px;
-  border-end-end-radius: ${(props) => props.endBorderRadius};
-  border-start-end-radius: ${(props) => props.endBorderRadius};
 `
 
 export default ProgressBar
