@@ -3,17 +3,14 @@ import styled from 'styled-components'
 
 import { COLORS } from '../../constants'
 import Icon from '../Icon'
-// import { getDisplayedValue } from './Select.helpers'
 
-const Select = ({ label, value, onChange, children }) => {
-  // const displayedValue = getDisplayedValue(value, children)
-
+const Select = ({ value, onChange, children }) => {
   return (
     <SelectWrapper>
+      <SyledIcon id="chevron-down" size={24} />
       <StyledSelect value={value} onChange={onChange}>
         {children}
       </StyledSelect>
-      <SyledIcon id="chevron-down" size={20} />
     </SelectWrapper>
   )
 }
@@ -26,7 +23,8 @@ const SelectWrapper = styled.div`
   font-style: normal;
   font-weight: 400;
   font-size: 1rem;
-  line-height: calc(19rem / 16);
+  line-height: ${19 / 16}rem;
+  isolation: isolate;
 
   &:hover {
     color: ${COLORS.black};
@@ -43,12 +41,13 @@ const StyledSelect = styled.select`
   color: inherit;
   font-size: inherit;
   border: none;
+  position: relative;
 `
 
 const SyledIcon = styled(Icon)`
   position: absolute;
-  top: 12px;
-  right: 12px;
+  top: 10px;
+  right: 10px;
 `
 
 export default Select
