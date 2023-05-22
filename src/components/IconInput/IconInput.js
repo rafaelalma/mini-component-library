@@ -8,20 +8,22 @@ import VisuallyHidden from '../VisuallyHidden'
 
 const SIZES = {
   small: {
-    '--fontSize': 14 + 'px',
+    '--fontSize': 14 / 16 + 'rem',
     '--lineHeight': 16 / 16,
     '--border': 1 + 'px',
-    '--padding': 32 + 'px',
+    '--padding': 24 + 'px',
+    '--height': 24 / 16 + 'rem',
   },
   large: {
-    '--fontSize': 18 + 'px',
+    '--fontSize': 18 / 16 + 'rem',
     '--lineHeight': 21 / 16,
     '--border': 2 + 'px',
-    '--padding': 40 + 'px',
+    '--padding': 36 + 'px',
+    '--height': 36 / 16 + 'rem',
   },
 }
 
-const IconInput = ({ label, icon, width = 250, size, placeholder }) => {
+const IconInput = ({ label, icon, width = 250, size, ...delegated }) => {
   const styles = SIZES[size]
   if (!styles) {
     throw new Error(`Unknown size passed to IconInput: ${size}`)
@@ -31,17 +33,13 @@ const IconInput = ({ label, icon, width = 250, size, placeholder }) => {
     <LabelWrapper htmlFor="input" style={styles}>
       <VisuallyHidden>{label}</VisuallyHidden>
       <IconWrapper id={icon} size={size === 'small' ? 18 : 24} />
-      <InputWrapper
-        id="input"
-        width={width}
-        size={size}
-        placeholder={placeholder}
-      />
+      <InputWrapper id="input" width={width} size={size} {...delegated} />
     </LabelWrapper>
   )
 }
 
 const LabelWrapper = styled.label`
+  display: block;
   position: relative;
   color: ${COLORS.gray700};
 
@@ -52,6 +50,9 @@ const LabelWrapper = styled.label`
 
 const IconWrapper = styled(Icon)`
   position: absolute;
+  top: 0;
+  bottom: 0;
+  margin: auto 0;
 `
 
 const InputWrapper = styled.input`
@@ -66,6 +67,7 @@ const InputWrapper = styled.input`
   font-weight: 700;
   color: inherit;
   outline-offset: 2px;
+  height: var(--height);
 
   &::placeholder {
     color: ${COLORS.gray500};
